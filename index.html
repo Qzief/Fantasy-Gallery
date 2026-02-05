@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <title>IKAM Archives | Ancient Codex</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Ancient codex of forgotten entities and mythical runes.">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            fantasy: ['"Cinzel"', 'serif'],
+            body: ['"Cormorant Garamond"', 'serif'],
+          },
+          colors: {
+            'void': '#050505',
+            'gold-dim': '#8a6a4b',
+            'gold-bright': '#d4af37',
+            'rune-glow': '#4ade80',
+          },
+          backgroundImage: {
+            'noise': "url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%220.05%22/%3E%3C/svg%3E')",
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { background-color: #020203; color: #e5e5e5; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f0f0f; }
+    ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 4px; }
+    .card-hover-effect { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .card-hover-effect:hover { transform: translateY(-4px); box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.8); }
+    .ancient-border { position: relative; border: 1px solid #292524; }
+    .ancient-border::before, .ancient-border::after { content: ""; position: absolute; width: 8px; height: 8px; border: 1px solid #57534e; transition: all 0.3s ease; }
+    .ancient-border::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+    .ancient-border::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+    .card-hover-effect:hover .ancient-border::before, .card-hover-effect:hover .ancient-border::after { width: 100%; height: 100%; border-color: #8a6a4b; opacity: 0.5; }
+    input, textarea, select { background: rgba(0,0,0,0.3); border: 1px solid #292524; color: #d6d3d1; font-family: 'Cormorant Garamond', serif; }
+    input:focus, textarea:focus, select:focus { outline: none; border-color: #8a6a4b; box-shadow: 0 0 10px rgba(138, 106, 75, 0.2); }
+    @keyframes pulse-skeleton { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+    .skeleton { animation: pulse-skeleton 1.5s infinite ease-in-out; background-color: #1c1917; }
+    /* Utility to force hide */
+    .force-hidden { display: none !important; }
+    .force-flex { display: flex !important; }
+
+    /* Music Button Animation */
+    .music-playing { animation: pulse-gold 2s infinite; color: #d4af37; border-color: #8a6a4b; }
+    @keyframes pulse-gold { 0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); } 70% { box-shadow: 0 0 0 6px rgba(212, 175, 55, 0); } 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); } }
+  </style>
+</head>
+
+<body class="font-body bg-void min-h-screen relative overflow-x-hidden">
+
+<!-- AUDIO ELEMENT -->
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<!-- Background -->
+<div class="fixed inset-0 bg-noise pointer-events-none z-0 opacity-40 mix-blend-overlay"></div>
+<div class="fixed inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-stone-900/20 via-void to-void pointer-events-none z-0"></div>
+<div class="fixed top-20 left-10 text-8xl text-stone-900/30 font-fantasy select-none pointer-events-none rotate-12">ᚠ</div>
+<div class="fixed bottom-20 right-10 text-9xl text-stone-900/30 font-fantasy select-none pointer-events-none -rotate-12">ᚱ</div>
+
+<!-- NAVBAR -->
+<nav class="sticky top-0 z-40 backdrop-blur-md bg-void/80 border-b border-stone-800/50">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <!-- Logo -->
+    <div class="flex items-center gap-3 group cursor-pointer" onclick="window.location.reload()">
+      <div class="w-8 h-8 border border-stone-600 rotate-45 flex items-center justify-center group-hover:border-gold-dim transition-colors duration-500">
+        <span class="text-stone-400 -rotate-45 text-lg font-fantasy group-hover:text-gold-bright">ᛟ</span>
+      </div>
+      <div class="flex flex-col hidden sm:flex">
+        <span class="font-fantasy tracking-[0.2em] text-stone-200 text-lg leading-none">IKAM</span>
+        <span class="text-[10px] text-stone-500 tracking-widest uppercase">Archives</span>
+      </div>
+    </div>
+
+    <!-- Right Side -->
+    <div class="flex items-center gap-4">
+
+      <!-- MUSIC TOGGLE -->
+      <button id="musicBtn" onclick="toggleMusic()" class="w-8 h-8 rounded-full border border-stone-700 flex items-center justify-center text-stone-500 hover:text-gold-bright hover:border-gold-dim transition-all" title="Toggle Ambience">
+        <svg id="musicIconOff" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+        </svg>
+        <svg id="musicIconOn" xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+        </svg>
+      </button>
+
+      <!-- Search -->
+      <div class="relative group hidden sm:block">
+        <div class="absolute -inset-0.5 bg-gradient-to-r from-stone-700 to-stone-800 rounded-full opacity-50 group-hover:opacity-100 transition duration-500 blur-[1px]"></div>
+        <div class="relative flex items-center bg-black rounded-full px-4 py-1.5 border border-stone-800">
+          <span class="text-stone-500 mr-2 text-xs">ᛊ</span>
+          <input id="search" type="text" placeholder="Search..." class="bg-transparent border-none focus:outline-none text-stone-300 text-sm w-24 placeholder-stone-600 font-body tracking-wide">
+        </div>
+      </div>
+
+      <!-- AUTH BUTTONS -->
+      <div id="authContainer">
+        <button onclick="openAuthModal()" class="flex items-center gap-2 px-4 py-1.5 border border-stone-700 rounded-sm text-xs font-fantasy text-stone-400 hover:text-gold-bright hover:border-gold-dim transition-all">
+          <span>LOGIN / REGISTER</span>
+        </button>
+      </div>
+
+      <div id="userContainer" class="force-hidden items-center gap-3">
+        <button onclick="openUploadModal()" class="flex items-center gap-2 px-4 py-1.5 bg-stone-900 border border-gold-dim/50 rounded-sm text-xs font-fantasy text-gold-dim hover:bg-gold-dim hover:text-black transition-all">
+          <span>+ INSCRIBE</span>
+        </button>
+        <div class="w-8 h-8 rounded-full bg-stone-800 border border-stone-600 flex items-center justify-center text-stone-300 font-fantasy cursor-pointer hover:border-gold-dim" id="userAvatar" onclick="handleLogout()" title="Sign Out">
+          ?
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HEADER -->
+<header class="relative z-10 text-center py-16 sm:py-20 px-4">
+  <div class="inline-block mb-4">
+    <div class="flex items-center justify-center gap-4 text-stone-600 text-xs tracking-[0.5em] uppercase">
+      <span class="h-[1px] w-12 bg-gradient-to-r from-transparent to-stone-600"></span>
+      <span>Est. ᛗᛗᚷᚷ</span>
+      <span class="h-[1px] w-12 bg-gradient-to-l from-transparent to-stone-600"></span>
+    </div>
+  </div>
+  <h1 class="font-fantasy text-4xl sm:text-6xl text-transparent bg-clip-text bg-gradient-to-b from-stone-100 to-stone-500 tracking-widest drop-shadow-lg">
+    ANCIENT ARCHIVES
+  </h1>
+  <p class="mt-4 text-stone-500 max-w-lg mx-auto text-lg italic">
+    "Those who gaze into the abyss find the abyss gazing back."
+  </p>
+</header>
+
+<!-- MAIN GRID -->
+<main id="cardGrid" class="relative z-10 max-w-7xl mx-auto px-6 pb-32 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+  <div class="skeleton aspect-[3/4] rounded-sm"></div>
+  <div class="skeleton aspect-[3/4] rounded-sm"></div>
+  <div class="skeleton aspect-[3/4] rounded-sm"></div>
+  <div class="skeleton aspect-[3/4] rounded-sm"></div>
+</main>
+
+<!-- FOOTER -->
+<footer class="relative z-10 border-t border-stone-900 bg-black/80 py-12 text-center">
+  <div class="max-w-7xl mx-auto px-6">
+    <p class="text-stone-600 text-xs tracking-widest uppercase">&copy; 2024 IKAM Archives.</p>
+  </div>
+</footer>
+
+<!-- MODALS -->
+<!-- 1. DETAIL MODAL -->
+<div id="modal" class="fixed inset-0 z-50 hidden items-center justify-center px-4 sm:px-6">
+  <div class="absolute inset-0 bg-black/90 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+  <div class="relative w-full max-w-4xl bg-stone-950 border border-stone-800 shadow-2xl transform transition-all scale-95 opacity-0 duration-300 flex flex-col max-h-[90vh]" id="modalContent">
+    <button onclick="closeModal()" class="absolute top-4 right-4 z-40 text-stone-500 hover:text-gold-bright bg-black/50 rounded-full p-1">✕</button>
+    <div class="flex flex-col md:flex-row h-full overflow-hidden">
+      <div class="relative w-full md:w-5/12 h-64 md:h-auto bg-black shrink-0">
+        <img id="modalImg" src="" class="absolute inset-0 w-full h-full object-cover opacity-90">
+        <div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-stone-950 to-transparent z-20 md:hidden">
+          <h2 id="modalTitleMobile" class="text-3xl font-fantasy text-stone-100 tracking-widest"></h2>
+        </div>
+      </div>
+      <div class="flex-1 p-8 md:p-10 bg-stone-950 relative overflow-y-auto custom-scrollbar">
+        <div class="absolute top-10 right-10 text-[150px] text-stone-900/20 font-fantasy pointer-events-none select-none leading-none">ᛟ</div>
+        <div class="relative z-10 space-y-6">
+          <div class="hidden md:block">
+            <h2 id="modalTitle" class="text-4xl font-fantasy text-stone-100 tracking-widest"></h2>
+            <p id="modalSubtitle" class="text-gold-dim text-sm tracking-widest uppercase mt-1"></p>
+          </div>
+          <div class="flex items-center gap-4 text-xs text-stone-500 font-fantasy tracking-widest border-b border-stone-900 pb-4">
+            <span>CLASS: <span id="modalClass" class="text-stone-300">UNKNOWN</span></span>
+            <span>•</span>
+            <span>ORIGIN: <span id="modalOrigin" class="text-stone-300">VOID</span></span>
+          </div>
+          <p id="modalDesc" class="text-stone-400 text-lg leading-relaxed font-body italic"></p>
+
+          <!-- RESPONSIVE STATS GRID -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 mt-4">
+            <div class="text-center p-3 border border-stone-800 bg-stone-900/30">
+              <div class="text-xs text-stone-500 uppercase tracking-wider mb-1">Power</div>
+              <div id="modalPower" class="text-gold-dim font-fantasy text-xl">0</div>
+            </div>
+            <div class="text-center p-3 border border-stone-800 bg-stone-900/30">
+              <div class="text-xs text-stone-500 uppercase tracking-wider mb-1">Mana</div>
+              <div id="modalMana" class="text-gold-dim font-fantasy text-xl">0</div>
+            </div>
+            <!-- Rune takes full width on mobile -->
+            <div class="text-center p-3 border border-stone-800 bg-stone-900/30 col-span-2 sm:col-span-1">
+              <div class="text-xs text-stone-500 uppercase tracking-wider mb-1">Rune</div>
+              <div id="modalRune" class="text-gold-dim font-fantasy text-xl">?</div>
+            </div>
+          </div>
+
+          <div class="flex justify-between items-center mt-6 border-t border-stone-900 pt-4">
+            <p class="text-[10px] text-stone-600 uppercase tracking-widest">Inscribed by: <span id="modalScribe" class="text-stone-500">Unknown</span></p>
+            <button id="deleteBtn" class="hidden text-xs text-red-900 hover:text-red-500 font-fantasy tracking-widest uppercase border border-red-900/30 px-3 py-1 hover:bg-red-900/10 transition-colors">BANISH ENTITY</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. AUTH MODAL -->
+<div id="authModal" class="fixed inset-0 z-50 hidden items-center justify-center px-4">
+  <div class="absolute inset-0 bg-black/95 backdrop-blur-sm" onclick="closeAuthModal()"></div>
+  <div class="relative w-full max-w-md bg-stone-950 border border-stone-800 p-8 shadow-2xl">
+    <h2 class="text-2xl font-fantasy text-center text-stone-200 mb-6">SCRIBE ACCESS</h2>
+    <div class="space-y-4">
+      <button id="googleLoginBtn" class="w-full flex items-center justify-center gap-3 py-3 bg-stone-900 border border-stone-700 hover:border-gold-dim hover:text-gold-bright transition-all">
+        <span class="font-fantasy tracking-wider text-sm">Sign in with Google</span>
+      </button>
+      <div class="relative py-2">
+        <div class="absolute inset-0 flex items-center"><span class="w-full border-t border-stone-800"></span></div>
+        <div class="relative flex justify-center text-xs uppercase"><span class="bg-stone-950 px-2 text-stone-600">Or Email</span></div>
+      </div>
+      <form id="emailLoginForm" class="space-y-3">
+        <input type="email" id="emailInput" placeholder="Email" class="w-full p-2 text-center" required>
+        <input type="password" id="passwordInput" placeholder="Password" class="w-full p-2 text-center" required>
+        <div class="flex gap-2">
+          <button type="submit" class="flex-1 py-2 bg-stone-900 border border-stone-700 text-xs font-fantasy hover:border-gold-dim">LOGIN</button>
+          <button type="button" id="emailSignupBtn" class="flex-1 py-2 bg-stone-900 border border-stone-700 text-xs font-fantasy hover:border-gold-dim">REGISTER</button>
+        </div>
+      </form>
+      <p id="authErrorMsg" class="text-red-500 text-xs text-center hidden"></p>
+    </div>
+  </div>
+</div>
+
+<!-- 3. UPLOAD MODAL -->
+<div id="uploadModal" class="fixed inset-0 z-50 hidden items-center justify-center px-4">
+  <div class="absolute inset-0 bg-black/95 backdrop-blur-sm" onclick="closeUploadModal()"></div>
+  <div class="relative w-full max-w-2xl bg-stone-950 border border-stone-800 p-6 md:p-8 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
+    <button onclick="closeUploadModal()" class="absolute top-4 right-4 text-stone-500 hover:text-gold-bright">✕</button>
+
+    <h2 class="text-2xl font-fantasy text-center text-stone-200 mb-1">INSCRIBE RUNE</h2>
+    <p class="text-center text-stone-500 text-xs tracking-[0.3em] uppercase mb-6">Record New Entity</p>
+
+    <form id="uploadForm" class="space-y-5">
+
+      <!-- Image -->
+      <div class="border border-dashed border-stone-700 p-4 text-center hover:border-gold-dim transition-colors">
+        <label class="block text-gold-dim font-fantasy text-sm mb-1">Entity Visage (Image)</label>
+        <p class="text-[10px] text-stone-500 mb-2">Recommended: Portrait Ratio (3:4) for best card fit.</p>
+        <input type="file" id="imageFile" accept="image/*" required class="w-full text-sm text-stone-400">
+      </div>
+
+      <!-- Info -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-stone-500 text-xs uppercase tracking-wider mb-1">Entity Name</label>
+          <div class="flex gap-2">
+            <input type="text" id="upTitle" placeholder="e.g. FENRIR" class="w-full p-2 font-fantasy tracking-wide" required>
+            <button type="button" onclick="generateRandomName()" class="px-3 bg-stone-800 border border-stone-600 hover:border-gold-dim text-stone-400 hover:text-gold-bright" title="Random Name">🎲</button>
+          </div>
+          <p class="text-[10px] text-red-500 mt-1 hidden" id="nameError">Invalid Name: No numbers/symbols allowed.</p>
+        </div>
+        <div>
+          <label class="block text-stone-500 text-xs uppercase tracking-wider mb-1">Epithet / Subtitle</label>
+          <input type="text" id="upSubtitle" placeholder="e.g. The Wolf of Apocalypse" class="w-full p-2" required>
+        </div>
+      </div>
+
+      <!-- Stats (RESPONSIVE DROPDOWNS) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-stone-500 text-xs uppercase tracking-wider mb-1">Class</label>
+          <select id="upClass" class="w-full p-2 text-center cursor-pointer" required>
+            <option value="" disabled selected>Select Class</option>
+            <option value="Leviathan">Leviathan</option>
+            <option value="Celestial">Celestial</option>
+            <option value="Construct">Construct</option>
+            <option value="Eldritch">Eldritch</option>
+            <option value="Beast">Beast</option>
+            <option value="Spirit">Spirit</option>
+            <option value="Titan">Titan</option>
+            <option value="Warlord">Warlord</option>
+            <option value="Elemental">Elemental</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-stone-500 text-xs uppercase tracking-wider mb-1">Origin</label>
+          <select id="upOrigin" class="w-full p-2 text-center cursor-pointer" required>
+            <option value="" disabled selected>Select Origin</option>
+            <option value="Void">Void</option>
+            <option value="Abyss">Abyss</option>
+            <option value="Aether">Aether</option>
+            <option value="Terra">Terra</option>
+            <option value="Inferno">Inferno</option>
+            <option value="Glacia">Glacia</option>
+            <option value="Necropolis">Necropolis</option>
+            <option value="Arcadia">Arcadia</option>
+            <option value="Cosmos">Cosmos</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-stone-500 text-xs uppercase tracking-wider mb-1">Rune</label>
+          <input type="text" id="upRune" placeholder="Type 'F' for ᚠ" class="w-full p-2 text-center font-fantasy" required>
+        </div>
+      </div>
+
+      <!-- POWER & MANA REMOVED (Auto Generated) -->
+      <div class="text-center text-xs text-stone-600 italic border border-stone-800 p-2 bg-stone-900/50">
+        * Power & Mana will be divined by the Ancients based on the Entity's Name.
+      </div>
+
+      <div>
+        <label class="block text-stone-500 text-xs uppercase tracking-wider mb-1">Lore / Legend</label>
+        <textarea id="upDesc" rows="3" placeholder="Tell the ancient legend of this entity..." class="w-full p-2" required></textarea>
+      </div>
+
+      <button type="submit" id="submitBtn" class="w-full py-3 bg-stone-900 border border-stone-700 text-stone-300 font-fantasy tracking-[0.2em] hover:bg-stone-800 hover:text-gold-bright hover:border-gold-dim transition-all">
+        INSCRIBE INTO CODEX
+      </button>
+      <div id="statusMsg" class="text-center text-xs tracking-widest mt-2 hidden"></div>
+    </form>
+  </div>
+</div>
+
+<!-- LOGIC -->
+<script type="module">
+  // --- CONFIGURATION ---
+  const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1467157188689531054/0kuOD_yoM82iy1xYqKMbV8CjPt0ZlB85S1CH0SGTPUd3VYN87Fy2gdy7FPTmcchHv7tr";
+
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs, getDoc, addDoc, deleteDoc, doc, setDoc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+  const firebaseConfig = {
+  apiKey: "AIzaSyBIiMVbWTxElmvbNf_m6zK-XaSnbXxwLk8",
+  authDomain: "arufkuy-gallery.firebaseapp.com",
+  projectId: "arufkuy-gallery",
+  storageBucket: "arufkuy-gallery.firebasestorage.app",
+  messagingSenderId: "554459431239",
+  appId: "1:554459431239:web:49951746a0e2f42a234c62"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  // --- MUSIC LOGIC ---
+  const music = document.getElementById('bgMusic');
+  const musicBtn = document.getElementById('musicBtn');
+  const iconOff = document.getElementById('musicIconOff');
+  const iconOn = document.getElementById('musicIconOn');
+
+  music.volume = 0.3;
+
+  music.play().then(() => {
+    updateMusicUI(true);
+  }).catch(() => {
+    console.log("Autoplay blocked. Waiting for interaction.");
+    document.addEventListener('click', () => {
+      if(music.paused) {
+        music.play();
+        updateMusicUI(true);
+      }
+    }, { once: true });
+  });
+
+  window.toggleMusic = () => {
+    if (music.paused) {
+      music.play();
+      updateMusicUI(true);
+    } else {
+      music.pause();
+      updateMusicUI(false);
+    }
+  };
+
+  function updateMusicUI(isPlaying) {
+    if(isPlaying) {
+      iconOff.classList.add('hidden');
+      iconOn.classList.remove('hidden');
+      musicBtn.classList.add('music-playing');
+    } else {
+      iconOff.classList.remove('hidden');
+      iconOn.classList.add('hidden');
+      musicBtn.classList.remove('music-playing');
+    }
+  }
+
+  // --- RUNE CONVERTER ---
+  const runeMap = {
+    'a': 'ᚨ', 'b': 'ᛒ', 'c': 'ᚲ', 'd': 'ᛞ', 'e': 'ᛖ', 'f': 'ᚠ', 'g': 'ᚷ', 'h': 'ᚺ', 'i': 'ᛁ',
+    'j': 'ᛃ', 'k': 'ᚲ', 'l': 'ᛚ', 'm': 'ᛗ', 'n': 'ᚾ', 'o': 'ᛟ', 'p': 'ᛈ', 'q': 'ᚲ', 'r': 'ᚱ',
+    's': 'ᛊ', 't': 'ᛏ', 'u': 'ᚢ', 'v': 'ᚢ', 'w': 'ᚹ', 'x': 'ᚲᛊ', 'y': 'ᛃ', 'z': 'ᛉ', ' ': ':'
+  };
+  document.getElementById('upRune').addEventListener('input', function(e) {
+    const input = e.target.value.toLowerCase();
+    let output = '';
+    for (let char of input) {
+      output += runeMap[char] || char;
+    }
+    e.target.value = output;
+  });
+
+  // --- NAME GENERATOR & VALIDATION ---
+  const fantasyPrefix = ["Ae", "Tho", "Vor", "Xy", "Zar", "Lu", "Myr", "Kae", "Oth", "Fen"];
+  const fantasySuffix = ["nix", "gard", "thos", "mir", "zog", "las", "wen", "dor", "ius", "rir"];
+
+  window.generateRandomName = () => {
+    const pre = fantasyPrefix[Math.floor(Math.random() * fantasyPrefix.length)];
+    const suf = fantasySuffix[Math.floor(Math.random() * fantasySuffix.length)];
+    document.getElementById('upTitle').value = (pre + suf).toUpperCase();
+    document.getElementById('nameError').classList.add('hidden');
+  };
+
+  function validateName(name) {
+    if (!/^[a-zA-Z\s]+$/.test(name)) return "Only ancient letters allowed.";
+    if (name.length < 3) return "Name too short.";
+    if (/(.)\1\1/.test(name)) return "Gibberish detected.";
+    return null;
+  }
+
+  // --- ANCIENT STATS GENERATOR ---
+  function generateAncientStats(name, cls, origin) {
+    const seed = (name + cls + origin).toUpperCase();
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+      hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+      hash |= 0;
+    }
+    hash = Math.abs(hash);
+    const power = (hash % 8000) + 1500;
+    const mana = ((hash * 7) % 4000) + 500;
+    return { power, mana };
+  }
+
+  // --- GLOBAL STATE ---
+  let isCurrentUserAdmin = false;
+
+  // --- AUTH STATE UI ---
+  const authContainer = document.getElementById('authContainer');
+  const userContainer = document.getElementById('userContainer');
+  const userAvatar = document.getElementById('userAvatar');
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      authContainer.classList.add('force-hidden');
+      userContainer.classList.remove('force-hidden');
+      userContainer.classList.add('force-flex');
+      userAvatar.innerText = (user.displayName || user.email).charAt(0).toUpperCase();
+      closeAuthModal();
+
+      try {
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists() && userDoc.data().role === 'admin') {
+          isCurrentUserAdmin = true;
+        } else {
+          isCurrentUserAdmin = false;
+        }
+      } catch (e) {
+        isCurrentUserAdmin = false;
+      }
+
+    } else {
+      authContainer.classList.remove('force-hidden');
+      userContainer.classList.add('force-hidden');
+      userContainer.classList.remove('force-flex');
+      isCurrentUserAdmin = false;
+    }
+  });
+
+  // --- AUTH ACTIONS ---
+  window.openAuthModal = () => {
+    const el = document.getElementById('authModal');
+    el.classList.remove('hidden'); el.classList.add('flex');
+  };
+  window.closeAuthModal = () => {
+    const el = document.getElementById('authModal');
+    el.classList.add('hidden'); el.classList.remove('flex');
+  };
+  window.handleLogout = () => {
+    if(confirm("Sign out from the Archives?")) signOut(auth);
+  };
+
+  document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (err) {
+      alert("Login Failed: " + err.message);
+    }
+  });
+
+  document.getElementById('emailLoginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = document.getElementById('emailInput').value;
+    const pass = document.getElementById('passwordInput').value;
+    signInWithEmailAndPassword(auth, email, pass).catch(err => {
+      document.getElementById('authErrorMsg').innerText = err.message;
+      document.getElementById('authErrorMsg').classList.remove('hidden');
+    });
+  });
+
+  document.getElementById('emailSignupBtn').addEventListener('click', async () => {
+    const email = document.getElementById('emailInput').value;
+    const pass = document.getElementById('passwordInput').value;
+    if(!email || !pass) return alert("Email & Password required");
+
+    try {
+      await createUserWithEmailAndPassword(auth, email, pass);
+    } catch (err) {
+      document.getElementById('authErrorMsg').innerText = err.message;
+      document.getElementById('authErrorMsg').classList.remove('hidden');
+    }
+  });
+
+  // --- UPLOAD ACTIONS ---
+  window.openUploadModal = () => {
+    const el = document.getElementById('uploadModal');
+    el.classList.remove('hidden'); el.classList.add('flex');
+  };
+  window.closeUploadModal = () => {
+    const el = document.getElementById('uploadModal');
+    el.classList.add('hidden'); el.classList.remove('flex');
+  };
+
+  document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (DISCORD_WEBHOOK_URL.includes("MASUKKAN")) return alert("Config Error: Webhook Missing");
+
+    const user = auth.currentUser;
+    if (!user) return alert("Must be logged in!");
+
+    const titleInput = document.getElementById('upTitle');
+    const nameError = validateName(titleInput.value);
+    if (nameError) {
+      document.getElementById('nameError').innerText = nameError;
+      document.getElementById('nameError').classList.remove('hidden');
+      return;
+    } else {
+      document.getElementById('nameError').classList.add('hidden');
+    }
+
+    const btn = document.getElementById('submitBtn');
+    const msg = document.getElementById('statusMsg');
+
+    btn.disabled = true;
+    btn.innerText = "UPLOADING...";
+    msg.innerText = "Sending to Void...";
+    msg.classList.remove('hidden');
+
+    try {
+      const file = document.getElementById('imageFile').files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const discordResp = await fetch(DISCORD_WEBHOOK_URL, { method: 'POST', body: formData });
+      if (!discordResp.ok) throw new Error("Image Upload Failed");
+      const discordData = await discordResp.json();
+      const imageUrl = discordData.attachments[0].url;
+
+      const title = titleInput.value.toUpperCase();
+      const cls = document.getElementById('upClass').value;
+      const origin = document.getElementById('upOrigin').value;
+      const stats = generateAncientStats(title, cls, origin);
+
+      await addDoc(collection(db, "archives"), {
+        title: title,
+        subtitle: document.getElementById('upSubtitle').value,
+        class: cls,
+        origin: origin,
+        rune: document.getElementById('upRune').value,
+        power: stats.power,
+        mana: stats.mana,
+        desc: document.getElementById('upDesc').value,
+        img: imageUrl,
+        createdAt: serverTimestamp(),
+        uid: user.uid,
+        scribeName: user.displayName || user.email.split('@')[0]
+      });
+
+      msg.innerText = "SUCCESS!";
+      msg.classList.add('text-green-500');
+      setTimeout(() => {
+        closeUploadModal();
+        document.getElementById('uploadForm').reset();
+        loadArchives();
+        btn.disabled = false;
+        btn.innerText = "INSCRIBE";
+        msg.classList.add('hidden');
+      }, 1000);
+
+    } catch (err) {
+      console.error(err);
+      msg.innerText = "ERROR: " + err.message;
+      msg.classList.add('text-red-500');
+      btn.disabled = false;
+    }
+  });
+
+  // --- DELETE ACTION ---
+  const deleteBtn = document.getElementById('deleteBtn');
+  deleteBtn.addEventListener('click', async () => {
+    const docId = deleteBtn.dataset.id;
+    if(!docId) return;
+    if(confirm("Are you sure you want to BANISH this entity forever?")) {
+      try {
+        await deleteDoc(doc(db, "archives", docId));
+        closeModal();
+        loadArchives();
+        alert("Entity Banished.");
+      } catch (err) {
+        alert("Failed to banish: " + err.message);
+      }
+    }
+  });
+
+  // --- DISPLAY DATA ---
+  const cardGrid = document.getElementById('cardGrid');
+  async function loadArchives() {
+    try {
+      const q = query(collection(db, "archives"), orderBy("createdAt", "desc"));
+      const querySnapshot = await getDocs(q);
+      cardGrid.innerHTML = "";
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        data.id = doc.id;
+        cardGrid.appendChild(createCard(data));
+      });
+      if (querySnapshot.empty) cardGrid.innerHTML = `<p class="col-span-full text-center text-stone-600">Empty Archives...</p>`;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  function createCard(data) {
+    const btn = document.createElement('button');
+    btn.className = "card group text-left w-full focus:outline-none";
+    btn.dataset.name = data.title.toLowerCase();
+    btn.onclick = () => openModal(data);
+    btn.innerHTML = `
+      <div class="card-hover-effect relative bg-stone-900/40 p-1">
+        <div class="ancient-border h-full p-3 bg-black/60 backdrop-blur-sm">
+          <div class="relative aspect-[3/4] overflow-hidden border border-stone-800/50 grayscale-[30%] group-hover:grayscale-0 transition duration-700">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+            <img src="${data.img}" onerror="this.src='https://placehold.co/400x600/1a1a1a/FFF?text=VOID'" class="w-full h-full object-cover transform group-hover:scale-110 transition duration-1000 ease-out">
+            <div class="absolute top-2 right-2 z-20">
+              <div class="w-6 h-6 border border-stone-600 bg-black/80 flex items-center justify-center rotate-45">
+                <span class="text-[10px] text-stone-300 -rotate-45 font-fantasy">${data.rune || '?'}</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 relative">
+            <div class="flex justify-between items-end border-b border-stone-800 pb-2 mb-2">
+              <h2 class="font-fantasy text-xl text-stone-200 tracking-wider group-hover:text-gold-bright transition-colors truncate pr-2">${data.title}</h2>
+              <span class="text-xs text-stone-600 font-fantasy shrink-0">${data.class.substring(0,3).toUpperCase()}</span>
+            </div>
+            <p class="text-sm text-stone-400 font-body italic leading-relaxed line-clamp-2">${data.subtitle}</p>
+          </div>
+        </div>
+      </div>
+    `;
+    return btn;
+  }
+
+  window.openModal = (data) => {
+    document.getElementById('modalTitle').innerText = data.title;
+    document.getElementById('modalTitleMobile').innerText = data.title;
+    document.getElementById('modalSubtitle').innerText = data.subtitle;
+    document.getElementById('modalClass').innerText = data.class;
+    document.getElementById('modalOrigin').innerText = data.origin;
+    document.getElementById('modalDesc').innerText = data.desc;
+    document.getElementById('modalPower').innerText = data.power;
+    document.getElementById('modalMana').innerText = data.mana;
+    document.getElementById('modalRune').innerText = data.rune;
+    document.getElementById('modalScribe').innerText = data.scribeName || "Unknown";
+    document.getElementById('modalImg').src = data.img;
+
+    const user = auth.currentUser;
+    const delBtn = document.getElementById('deleteBtn');
+    delBtn.dataset.id = data.id;
+
+    if (user && (user.uid === data.uid || isCurrentUserAdmin)) {
+      delBtn.classList.remove('hidden');
+    } else {
+      delBtn.classList.add('hidden');
+    }
+
+    const m = document.getElementById('modal');
+    m.classList.remove('hidden'); m.classList.add('flex');
+    setTimeout(() => {
+      document.getElementById('modalContent').classList.remove('scale-95', 'opacity-0');
+      document.getElementById('modalContent').classList.add('scale-100', 'opacity-100');
+    }, 10);
+  };
+
+  window.closeModal = () => {
+    document.getElementById('modalContent').classList.remove('scale-100', 'opacity-100');
+    document.getElementById('modalContent').classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+      document.getElementById('modal').classList.add('hidden');
+      document.getElementById('modal').classList.remove('flex');
+    }, 300);
+  };
+
+  document.getElementById('search').addEventListener('input', (e) => {
+    const val = e.target.value.toLowerCase();
+    document.querySelectorAll('.card').forEach(c => {
+      c.style.display = c.dataset.name.includes(val) ? 'block' : 'none';
+    });
+  });
+
+  loadArchives();
+</script>
+
+</body>
+</html>
